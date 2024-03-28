@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Countdown Fun</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Ubuntu+Mono&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        text-align: center;
+        background-color: #f0f0f0;
+        margin: 40px;
+    }
+    @keyframes flashColor {
+        0%, 100% { color: #333; }
+        25% { color: #ff6347; }
+        50% { color: #4B0082; }
+        75% { color: #FFD700; }
+    }
+    h1 {
+        font-family: 'Ubuntu Mono', monospace;
+        animation: flashColor 4s infinite;
+    }
+    #countdown {
+        font-size: 36px;
+        font-weight: bold;
+        color: #ff6347; /* Tomato */
+        animation: fadeIn 4s;
+    }
+    #message, #scamWarning, #scamQuestion {
+        margin-top: 20px;
+        font-size: 20px;
+        display: none; /* Hidden by default, will be shown later */
+        animation: fadeIn 4s;
+    }
+    #scamWarning, #scamQuestion {
+        color: #e63946; /* Red */
+        font-weight: bold;
+    }
+    a, .scamResponse {
+        color: #007bff; /* Blue */
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .scamResponse:hover {
+        text-decoration: underline;
+    }
+    .floating-words {
+        position: fixed;
+        font-size: 2em;
+        animation: floaty 10s infinite linear;
+        opacity: 0;
+    }
+    @keyframes floaty {
+        0% { bottom: -50px; opacity: 0; }
+        50% { opacity: 1; }
+        100% { bottom: 100%; opacity: 0; }
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .noBox {
+        position: relative; /* Updated for smoother movement */
+        display: inline-block;
+        margin: 0 20px; /* Ensure there's space for movement */
+    }
+</style>
+</head>
+<body>
+
+<h1>All the baddies are married in 2024</h1>
+<div id="countdown">Loading countdown...</div>
+<p>Report possible scam</p>
+<div id="message">
+    <a href="https://drive.google.com/drive/folders/1-4cFF6cucmiZFVeucKbKYHU8qNNGhI5u" target="_blank">Access the Google Drive Link</a>
+    <p id="scamQuestion" class="scamBox">Is it a scam?</p>
+    <div>
+        <span class="scamResponse noBox" style="margin-right: 20px;">Yes</span>
+        <span class="scamResponse">No</span>
+    </div>
+</div>
+<div id="scamWarning">Be vigilant. Verify before you trust.</div>
+
+<!-- Floating words for "bride" in different languages -->
+<div class="floating-words" style="left: 5%; animation-delay: 2s;">Bride</div>
+<div class="floating-words" style="left: 15%; animation-delay: 4s;">Novia</div>
+<div class="floating-words" style="left: 25%; animation-delay: 6s;">Mariée</div>
+<div class="floating-words" style="left: 35%; animation-delay: 8s;">Braut</div>
+<div class="floating-words" style="left: 45%; animation-delay: 10s;">Sposa</div>
+<div class="floating-words" style="left: 55%; animation-delay: 12s;">花嫁 (Hanayome)</div>
+<div class="floating-words" style="left: 65%; animation-delay: 14s;">Невеста (Nevesta)</div>
+<div class="floating-words" style="left: 75%; animation-delay: 16s;">Gelin</div>
+<div class="floating-words" style="left: 85%; animation-delay: 18s;">Pengantin</div>
+<div class="floating-words" style="left: 95%; animation-delay: 20s;">दुल्हन (Dulhan)</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/canvas-confetti.min.js"></script>
+<script>
+var countDownDate = new Date("March 29, 2024 00:00:00").getTime();
+
+var x = setInterval(function() {
+    var now = new Date().getTime();
+    var distance = countDownDate - now;
+
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
+    + minutes + "m " + seconds + "s ";
+
+    if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("countdown").style.display = "none";
+        document.getElementById("message").style.display = "block";
+        document.getElementById("scamWarning").style.display = "block";
+        document.getElementById("scamQuestion").style.display = "block";
+        fireConfetti();
+    }
+}, 1000);
+
+function fireConfetti() {
+    var end = Date.now() + (15 * 1000);
+    (function frame() {
+        confetti({
+            particleCount: 2,
+            startVelocity: 30,
+            spread: 360,
+            origin: { x: Math.random(), y: Math.random() - 0.2 }
+        });
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    }());
+}
+
+// Enhanced "Yes" button behavior to move smoothly away from the cursor
+document.querySelector('.noBox').addEventListener('mousemove', function(e) {
+    const moveDistance = 50; // Smaller move distance for smoother motion
+    const rect = this.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    let deltaX = moveDistance * (mouseX > rect.width / 2 ? -1 : 1);
+    let deltaY = moveDistance * (mouseY > rect.height / 2 ? -1 : 1);
+
+    // Ensuring the button does not move out of the viewport
+    let nextX = rect.left + deltaX;
+    let nextY = rect.top + deltaY;
+    nextX = Math.min(Math.max(nextX, 0), window.innerWidth - rect.width);
+    nextY = Math.min(Math.max(nextY, 0), window.innerHeight - rect.height);
+
+    this.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+    this.style.transition = 'transform 0.5s ease-out';
+});
+</script>
+
+</body>
+</html>
+
